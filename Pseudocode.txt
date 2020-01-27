@@ -1,0 +1,604 @@
+//***************************************************
+//*********Code for Graph****************************
+
+graph(int size) //graph constructor
+{
+	numNodes = size
+	points = new Point[size]
+	edges = new ArrayList<Integer>[size]
+	
+	for i = 0 to size - 1 //initialize points
+		curPoint = new Point(random x, random y)
+		if not(alreadyExists(curPoints, point) then points[i] = curPoint
+	end loop
+	
+	neighborQueues = new PriorityQueue<LineSegment>[size] //priority queues to determine closest neighbor
+	
+	//populate the queue for i with all the possible line segments from point i to other points
+	for i = 0 to size - 1
+		for j = 0 to size - 1
+			if not(i == j) then
+				neighborQueues[i].add(new LineSegment(points[i], points[j])) //LineSegment implements comparable based on distance property
+			end if
+		end loop
+	end loop
+	
+	breakLoop = false
+	allSegments = new ArrayList<LineSegment>
+	
+	do while breakLoop = false
+		index = random between 0 and size - 1
+		oldIndex = index
+		
+		while neighborQueues[index] is empty and breakLoop = false //if we picked a point that's gone through all it's neighbors, try the next one
+			index = index + 1
+			if index = size then index = 0
+			if index = oldIndex then breakLoop = true //if we've gone through all the points and they're all out of neighbors then break the loops
+		end loop
+		
+		//get the next eligible line segment
+		getNextSegment = true
+		while not(neighborQueues[index] is empty) and getNextSegment = true
+			curSegment = neighborQueues[index].dequeue
+			if isValidSegment(allSegments, curSegment) then getNextSegment = false //test for eligibilty - scan allSegments to see if it's already been used or intersects with any other segments
+		end loop
+		
+		if getNextSegment = false //means the current segment is valid
+			//determine the index of the line segment points in the points[] array
+			i = getIndexOfPoint(curSegment.getPoint1)
+			j = getIndexOfPoint(curSegment.getPoint2)
+			
+			//Add the edges; since this is not a directional graph we need to add the edge for both points
+			edges[i].Add(j)
+			edges[j].add(i)
+		end if
+	end loop
+}
+
+isValidSegment(ArrayList<LineSegment> allSegments, LineSegment testSegment) //helper function to test if a segment is valid
+{
+	for each curSeg in allSegments
+		if curSeg.equalTo(testSegment) or curSeg.doesIntersect(testSegment) then return false
+	end loop
+	
+	return true
+}
+
+//*********End Code for Graph************************
+//***************************************************
+
+
+//***************************************************
+//*********Code for Constraint Solver****************
+
+prepare(int size, int numColors)
+{
+	cost = 0
+	nodeColors = new int[size]
+	colorVals = new int[numColors + 1]
+	
+	for i = 1 to numColors //initialize possible color values for nodes; "0" means "uncolored"
+		colorVals[i] = i
+	end loop
+}
+
+//Check that the current coloring satisfies the constraint for the given graph and that all nodes have colors
+hasSolution(Graph myGraph)
+{
+	for i = 0 to nodeColors.size - 1
+		if nodeColors[i] = 0 then return false //if a node was left uncolored then it wasn't solved
+		neighborList = myGraph.getEdges(i)
+		
+		//Test if the node's neighbors share the same color (and that they've been assigned colors in the first place)
+		for each j in neighborList if nodeColors[i] = nodeColors[j] then return false
+	end loop
+	
+	return true
+}
+
+//*********End Code for Constraint Solver************
+//***************************************************
+
+
+//***************************************************
+//*********Code for Min Conflicts********************
+
+minConflicts(Graph myGraph, int numColors, int maxTries)
+{
+	prepare(myGraph.getNumNodes, numColors)
+	
+	//seed the node color array with random values
+	for i = 0 to nodeColors.size - 1
+		nodeColors[i] = random value from colorVals
+	end loop
+	
+	ArrayList<Integer> conflictedNodes = populateConflicts(myGraph)
+	tries = 0
+	
+	do while not(conflictedNodes is empty) and tries < maxtries
+		curNode = random value from conflictedNodes
+		cost++
+		minConflict = -1 //initialize; guaranteed to always be a value > 0
+		
+		for i = 1 to colorVals.size - 1
+			cost++
+			numConflicts = countConflicts(curNode, colorVals[i]) //count the conflicts that would happen if we assigned this node the current color
+			
+			//if we find a new min (or this is the first pass through) then reset the eligible values
+			if numConflicts < minConflict or minConflict = -1 then
+				eligibleVals = new ArrayList<Integer>
+				eligibleVals.add(colorVals[i])
+				minConflict = numConflicts
+			//if it equals the previous min then add it as an eligible value
+			else if numConflicts = minConflict then
+				eligibleVals.add(colorVals[i])
+			end if
+		end loop
+		
+		nodeColors[curNode] = random value from eligibleVals
+		conflictedNodes = populateConflicts(myGraph)
+		tries++
+	end loop
+	
+	if not (hasSolution(myGraph)) then cost = cost * -1
+}
+
+populateConflicts(Graph myGraph)
+{
+	ArrayList<Integer> nodeList
+	
+	for i = 0 to nodeColors.size - 1
+		cost++
+		neighborList = myGraph.getEdges(i)
+		
+		for each j in neighborList
+			if nodeColors[i] = nodeColors[j] then //don't need an extra condition for uncolored values, because we've populated all nodes with colors already
+				nodeList.add(i)
+				break for
+			end if
+		end loop
+	end loop
+	
+	return nodeList
+}
+
+countConflicts(Graph myGraph, int curNode, int newColor)
+{
+	retVal = 0
+	neighborList = myGraph.getEdges(curNode)
+	
+	for each j in neighborList
+		cost++
+		if newColor = nodeColors[j] then retVal++
+	end loop
+	
+	return retVal
+}
+
+//*********End Code for Min Conflicts****************
+//***************************************************
+
+	
+//***************************************************
+//*********Code for Simple Backtracking**************
+
+simpleBacktrack(Graph myGraph, int numColors)
+{
+	prepare(myGraph.getNumNodes, numColors)
+	
+	simpleBTColor(getNextNode(myGraph), myGraph)
+	
+	if not (hasSolution(myGraph)) then cost = cost * -1
+}
+
+simpleBTColor(int curNode, Graph myGraph)
+{
+	cost++
+	foundColor = false
+	
+	//loop through color assignments to the node, attempting to find a valid one
+	i = 1
+	do while foundColor = false and i <= colorVals.size - 1
+		cost++
+		
+		//check that this coloring is valid
+		if not(causesConflicts(myGraph, curNode, colorVals[i])) then
+			nodeColors[curNode] = colorVals[i]
+			nextNode = getNextNode(myGraph) //uses a heuristic function to pick the next node to color in order to speed up processing
+			
+			if nextNode < nodeColors.size //check that the next node actually exists
+				simpleBTColor(nextNode, myGraph) //recursively attempt to color the next node				
+
+				//test if we successfully assigned the next node a color
+				//if so, then the coloring we just tried for curNode is good and the color was found!
+				if not(nodeColors[nextNode] = colorVals[0]) then foundColor = true
+			else
+				foundColor = true
+			end if
+		end if
+		
+		i++
+	end loop
+	
+	//if there wasn't a valid color for this node, set it back to uncolored (backtracking step)
+	if foundColor = false then nodeColors[curNode] = colorVals[0]
+}
+
+causesConflicts(Graph myGraph, int theNode, int newColor) //SHARED BACKTRACKING PROC
+{
+	neighborList = myGraph.getEdges(theNode)
+	
+	for each j in neighborList
+		cost++
+		if newColor = nodeColors[j] then return true
+	end loop
+	
+	return false
+}
+
+//Procedure to facilitate getting the next node to color, gets the next uncolored node with the max number of neighbors
+//(heuristic is to color the node involved in the maximum number of constraints)
+getNextNode(Graph myGraph) //SHARED BACKTRACKING PROC
+{
+	maxNeighbors = -1
+	nextNode = -1
+	
+	for i = 0 to nodeColors.size - 1 //could speed this up by using a priority queue instead of a dumb linear search
+		//test if node i is uncolored and has the most neighbors we've seen so far
+		if nodeColors[i] = colorVals[0] and myGraph.getEdges(i).size > maxNeighbors then
+			maxNeighbors = myGraph.getEdges(i).size
+			nextNode = i
+		end if
+	end loop
+	
+	//if nextNode was never assigned a new value >= 0 then all nodes have a color
+	//return an out-of-bounds value to indicate all nodes are colored and halt recursion
+	if nextNode < 0 then nextNode = nodeColors.size
+	return nextNode
+}
+
+//*********End Code for Simple Backtracking**********
+//***************************************************	
+
+
+//***************************************************
+//*********Code for BackTracking w/ Fwd Check********
+//NOTE: this algorithm will need an extra global var: ArrayList<Integer>[] possibleValues
+//This will represent the possible legal color assignments for any given node, i.e. possibleValues[i] is an ArrayList of all the color vals that node i can be legally assigned
+
+backtrackWithFwdCheck(Graph myGraph, int numColors)
+{
+	prepare(myGraph.getNumNodes, numColors)
+	
+	//initialize possible values data structure
+	possibleValues = new ArrayList<Integer>[myGraph.getNumNodes]
+	for i = 0 to possibleValues.size - 1
+		possibleValues[i] = getPossibleValuesForNode(myGraph, i)
+	end loop
+	
+	btWithFwdCheckColor(getNextNode(myGraph), myGraph)
+	
+	if not (hasSolution(myGraph)) then cost = cost * -1
+}
+
+btWithFwdCheckColor(int curNode, Graph myGraph)
+{
+	cost++
+	foundColor = false	
+	
+	//loop through the possible valid color assignments for the current node
+	for each curColor in possibleValues[curNode]
+		cost++
+		
+		//check that this coloring is valid, with the additional look-ahead step to prune the search tree
+		if not(causesConflicts(myGraph, curNode, curColor)) and lookAhead(myGraph, curNode, curColor) = true then
+			nodeColors[curNode] = curColor
+			nextNode = getNextNode(myGraph) //uses a heuristic function to pick the next node to color in order to speed up processing
+			
+			if nextNode < nodeColors.size //check that the next node actually exists
+				btWithFwdCheckColor(nextNode, myGraph) //recursively attempt to color the next node				
+
+				//test if we successfully assigned the next node a color
+				//if so, then the coloring we just tried for curNode is good and the color was found!
+				if not(nodeColors[nextNode] = colorVals[0]) then foundColor = true
+			else
+				foundColor = true
+			end if
+		end if
+		
+		//if we found a color assignment that works, stop trying any other ones
+		if foundColor = true then break for
+	end loop
+	
+	//if there wasn't a valid color for this node, set it back to uncolored (backtracking step)
+	if foundColor = false then resetNodeColor(myGraph, curNode)
+}
+
+lookAhead(Graph myGraph, int testNode, int testColor)
+{
+	nodeColors[testNode] = testColor //temporarily assign the test node with the test color
+	
+	neighborList = myGraph.getEdges(testNode)
+	
+	//Check to make sure that each of the neighbors of the test node still have at least one valid variable assignment
+	for each i in neighborList
+		cost++
+		
+		//get the possible valid colors for node i given the test coloring
+		getPossibleValuesForNode(myGraph, i)
+		
+		//if node i ended up with no valid colors, then the test color assignment failed the look-ahead
+		if possibleValues[i] is empty then
+			resetNodeColor(myGraph, testNode) //reset the test node back to uncolored
+			return false
+		end if
+	end loop
+	
+	//if we made it this far, then that means that all the test node's neighbors still have at least one valid color, so it passed the look-ahead
+	nodeColors[testNode] = colorVals[0] //undo the temporary color assignment
+	return true
+}
+
+getPossibleValuesForNode(Graph myGraph, int theNode)
+{
+	values = new ArrayList<Integer>
+	neighborList = myGraph.getEdges(theNode)
+	
+	for i = 1 to colorVals.size - 1
+		cost++
+		boolean eligible = true
+		
+		for each j in neighborList
+			cost++
+			
+			if colorVals[i] = nodeColors[j] then //test if the current color is shared with any of the node's neighbors
+				eligible = false //if it is shared, then it's not a possible value
+				exit for
+			end if
+		end loop
+		
+		if eligible = true then values.add(colorVals[i])
+	end loop
+	
+	return values
+}
+
+resetNodeColor(Graph myGraph, int theNode)
+{
+	nodeColors[theNode] = colorVals[0] //set the node to uncolored
+	
+	neighborList = myGraph.getEdges(theNode)
+	
+	//update the possible values of the node's neighbors, since this node is now uncolored
+	for each j in neighborList
+		cost++
+		possibleValues[j] = getPossibleValuesForNode(myGraph, j)
+	end loop
+}
+
+causesConflicts(Graph myGraph, int theNode, int newColor) //SHARED BACKTRACKING PROC
+{
+	neighborList = myGraph.getEdges(theNode)
+	
+	for each j in neighborList
+		cost++
+		if newColor = nodeColors[j] then return true
+	end loop
+	
+	return false
+}
+
+//Procedure to facilitate getting the next node to color, gets the next uncolored node with the max number of neighbors
+//(heuristic is to color the node involved in the maximum number of constraints)
+getNextNode(Graph myGraph) //SHARED BACKTRACKING PROC
+{
+	maxNeighbors = -1
+	nextNode = -1
+	
+	for i = 0 to nodeColors.size - 1 //could speed this up by using a priority queue instead of a dumb linear search
+		//test if node i is uncolored and has the most neighbors we've seen so far
+		if nodeColors[i] = colorVals[0] and myGraph.getEdges(i).size > maxNeighbors then
+			maxNeighbors = myGraph.getEdges(i).size
+			nextNode = i
+		end if
+	end loop
+	
+	//if nextNode was never assigned a new value >= 0 then all nodes have a color
+	//return an out-of-bounds value to indicate all nodes are colored and halt recursion
+	if nextNode < 0 then nextNode = nodeColors.size
+	return nextNode
+}
+
+//*********End Code for BackTracking w/ Fwd Check****
+//***************************************************
+
+//***************************************************
+//*********Code for BackTracking w/ MAC**************
+
+backtrackWithMAC(Graph myGraph, int numColors)
+{
+	prepare(myGraph.getNumNodes, numColors)
+
+	btWithMACColor(0, myGraph)
+	
+	if not (hasSolution(myGraph)) then cost = cost * -1
+}
+
+btWithMACColor(int curNode, Graph myGraph)
+{
+	cost++
+	foundColor = false	
+	
+	//loop through color assignments to the node, attempting to find a valid one
+	i = 1
+	do while foundColor = false and i <= colorVals.size - 1
+		cost++
+		
+		//check that this coloring is valid, with the additional look-ahead step to prune the search tree
+		if not(causesConflicts(myGraph, curNode, colorVals[i])) and lookAhead(myGraph, curNode, colorVals[i]) = true then
+			nodeColors[curNode] = colorVals[i]
+			nextNode = curNode + 1
+			
+			if nextNode < nodeColors.size //check that the next node actually exists
+				btWithFwdCheckColor(nextNode, myGraph) //recursively attempt to color the next node				
+
+				//test if we successfully assigned the next node a color
+				//if so, then the coloring we just tried for curNode is good and the color was found!
+				if not(nodeColors[nextNode] = colorVals[0]) then foundColor = true
+			else
+				foundColor = true
+			end if
+		end if
+		
+		i++
+	end loop
+	
+	//if there wasn't a valid color for this node, set it back to uncolored (backtracking step)
+	if foundColor = false then nodeColors[curNode] = colorVals[0]
+}
+
+checkArcConsistency(Graph myGraph, int testNode, int testColor)
+{
+	nodeColors[testNode] = testColor //temporarily assign the test node with the test color
+	
+	ArrayList<Integer>[myGraph.getNumNodes] possibleValues //data structure to hold the possible color values for each node
+	possibleValues = populatePossibleValues(myGraph)
+	
+	//for every possible value of a given node, are there any values that make one of it's neighbors unsatisfiable? if so, then throw that value out!
+	for i = 0 to possibleValues.size - 1
+		neighborList = myGraph.getEdges(i)
+				
+		for each j in possibleValues[i] //loop through ArrayList of possible values for node i; j represents a color value
+			nodeColors[i] = j //temporarily assign this node the current color
+			
+			for each k in neighborList //loop through neighbors of node i
+				foundColor = false
+				
+				for each m in possibleValues[k] //loop through ArrayList of possible values for node k; m represents a color value
+					if not(causesConflicts(myGraph, k, m)) then //test if there is at least one valid coloring for node k given the color value we just assigned to node i
+						foundColor = true
+						break for
+					end if
+				end loop
+				
+				if foundColor = false then //if we couldn't find a valid coloring for node k when node i was assigned the color j, then color j is not actually valid for node i
+					possibleValues[i].remove(j)
+					break for
+				end if
+			end loop
+			
+		end loop
+		
+		nodeColors[i] = colorVals[0] //reset node i's color
+		
+		if possibleValues[i].isEmpty then //there are no valid color assignments for node i (all colorings of i make one of it's neighbors uncolorable)
+			nodeColors[testNode] = colorVals[0] //undo temporary color assignment
+			return false
+		end if
+	end loop
+	
+	nodeColors[testNode] = colorVals[0] //undo temporary color assignment
+	return true
+}
+
+causesConflicts(Graph myGraph, int theNode, int newColor)
+{
+	neighborList = myGraph.getEdges(theNode)
+	
+	for each j in neighborList
+		cost++
+		if newColor = nodeColors[j] then return true
+	end loop
+	
+	return false
+}
+
+//*********End Code for BackTracking w/ MAC**********
+//***************************************************	
+
+	
+//***************************************************
+//*********Code for Main Testing Proc****************
+
+main
+{
+	//build problem sets
+	graphs = new Graph[10]
+	for i = 1 to graphs.size
+		graphs[i - 1] = new Graph(i * 10)
+	end loop
+		
+	resultsDict = new Dictionary<String, Result>
+	
+	resultsDict.add("minConflicts", new Result(graphs.size))
+	resultsDict.add("simpleBacktrack", new Result(graphs.size))
+	resultsDict.add("backtrackWithFwdCheck", new Result(graphs.size))
+	resultsDict.add("backtrackMAC", new Result(graphs.size))
+	resultsDict.add("geneticAlgorithm", new Result(graphs.size))
+	
+	solver = new ConstraintSolver
+	
+	for i = 0 to graphs.size - 1
+		solver.minConflicts(graphs[i], 3, max tries)
+		results["minConflicts"].set3C(i, solver.getCost)
+		solver.minConflicts(graphs[i], 4, max tries)
+		results["minConflicts"].set4C(i, solver.getCost)
+		
+		solver.simpleBacktrack(graphs[i], 3)
+		results["simpleBacktrack"].set3C(i, solver.getCost)
+		solver.simpleBacktrack(graphs[i], 4)
+		results["simpleBacktrack"].set4C(i, solver.getCost)
+		
+		and so on for each coloring algorithm for 3 and 4 colors
+	end loop
+	
+	print results as output to screen
+}
+
+//*********End Code for Main Testing Proc************
+//***************************************************		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
