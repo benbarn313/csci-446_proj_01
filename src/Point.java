@@ -29,8 +29,8 @@ public class Point
         //first make sure they are collinear
         if (getOrientation(start, this, end) != 0) return false;
 
-        if (this.getX() <= Math.max(start.getX(), end.getX()) && this.getX() >= Math.min(start.getX(), end.getX())
-                && this.getY() <= Math.max(start.getY(), end.getY()) && this.getY() >= Math.min(start.getY(), end.getY()))
+        if (this.getX() < Math.max(start.getX(), end.getX()) && this.getX() > Math.min(start.getX(), end.getX())
+                && this.getY() < Math.max(start.getY(), end.getY()) && this.getY() > Math.min(start.getY(), end.getY()))
             return true;
         else return false;
     }
