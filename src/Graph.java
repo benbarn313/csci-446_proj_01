@@ -24,7 +24,7 @@ public class Graph {
         //priority queues to determine closest neighbor
         PriorityQueue<LineSegment>[] neighborQueues = populateQueues();
         //code to print the queue array for debugging; blocks graph creation
-        //printQueues(neighborQueues);
+        if (Main.DEBUG_LEVEL >= 2) printQueues(populateQueues());
 
         boolean breakLoop = false;
         ArrayList<LineSegment> allSegments = new ArrayList<LineSegment>();
@@ -126,9 +126,12 @@ public class Graph {
         for (int i = 0; i <= theQueues.length - 1; i++)
         {
             System.out.println(i + "==========================");
-            while (theQueues[i].size() > 0) { System.out.println(theQueues[i].poll()); }
+            while (theQueues[i].size() > 0)
+            {
+                LineSegment curSeg = (LineSegment) theQueues[i].poll();
+                System.out.println(curSeg);
+            }
         }
-        System.out.println("PRINTED QUEUES! GRAPH WILL NOT BE GENERATED!");
     }
 
     public String toString()
