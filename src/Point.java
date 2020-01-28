@@ -28,6 +28,7 @@ public class Point
     {
         //first make sure they are collinear
         if (getOrientation(start, this, end) != 0) return false;
+        else System.out.println("WARNING! Attempted liesBetween function with non-collinear points.");
 
         if (this.getX() < Math.max(start.getX(), end.getX()) && this.getX() > Math.min(start.getX(), end.getX())
                 && this.getY() < Math.max(start.getY(), end.getY()) && this.getY() > Math.min(start.getY(), end.getY()))
@@ -38,10 +39,12 @@ public class Point
     //return whether a path between 3 points is collinear, clockwise, or counter-clockwise
     public static int getOrientation(Point start, Point mid, Point end)
     {
-        double test = (((end.getY() - start.getY()) * (mid.getX() - start.getX())) - ((mid.getY() - start.getY()) * (end.getX() - start.getX())));
+        final double FUNCTIONAL_ZERO = 0.0000001;
+        double test = ((mid.getY() - start.getY()) * (end.getX() - mid.getX())) -
+                ((mid.getX() - start.getX()) * (end.getY() - mid.getY()));
 
-        if (test == 0) return 0; //collinear
-        else if (test < 0) return 1; //clockwise
+        if (Math.abs(test) <= FUNCTIONAL_ZERO) return 0; //collinear
+        else if (test > 0) return 1; //clockwise
         else return 2; //counter-clockwise
     }
 

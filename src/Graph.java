@@ -105,7 +105,7 @@ public class Graph {
     {
         for (LineSegment curSeg : allSegments)
         {
-            if (curSeg.equals(testSegment) || curSeg.doesIntersect(testSegment)) return false;
+            if (curSeg.equals(testSegment) || LineSegment.doesIntersect(curSeg, testSegment)) return false;
         }
         return true;
     }
@@ -119,7 +119,7 @@ public class Graph {
             if (thePoint.equals(points[i])) return i;
         }
         return -1;
-    }
+}
 
     private void printQueues(PriorityQueue[] theQueues)
     {
