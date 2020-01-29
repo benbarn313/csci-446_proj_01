@@ -280,8 +280,8 @@ public class ConstraintSolver
 
     private boolean checkArcConsistency(Graph myGraph, int testNode, int testColor)
     {
-        ArrayList<Integer>[] tempPossibleVals = populatePossibleValues(myGraph);
         nodeColors[testNode] = testColor; //temporarily assign the test node with the test color
+        ArrayList<Integer>[] tempPossibleVals = populatePossibleValues(myGraph);
 
         Queue<int[]> allEdges = myGraph.getAllEdges();
 
@@ -293,15 +293,15 @@ public class ConstraintSolver
             int node2 = curEdge[1];
 
             //we're only concerned with testing arc consistency with unassigned (uncolored) nodes
-            if (nodeColors[node1] != colorVals[0])
+            if (nodeColors[node1] == colorVals[0] && nodeColors[node2] == colorVals[0])
             {
                 boolean removed = false;
-                Integer[] possibleValsArr = (Integer[]) tempPossibleVals[node1].toArray();
+                Object[] possibleValsArr = tempPossibleVals[node1].toArray();
 
                 for (int i = 0; i <= possibleValsArr.length - 1; i++)
                 {
                     cost++;
-                    nodeColors[node1] = possibleValsArr[i];
+                    nodeColors[node1] = (Integer) possibleValsArr[i];
                     ArrayList<Integer> node2NewPossVals = getPossibleValuesForNode(myGraph, node2);
                     nodeColors[node1] = colorVals[0]; //undo temporary color assignment
 
