@@ -4,7 +4,7 @@ public class Main
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(4);
+	    Graph myGraph = new Graph(60);
 	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
