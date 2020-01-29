@@ -16,6 +16,9 @@ public class Graph {
         buildGraph();
     }
 
+    public int getNumNodes() { return numNodes; }
+    public ArrayList<Integer> getEdges(int theNode) { return edges[theNode]; }
+
     private void buildGraph()
     {
         //populate the points
