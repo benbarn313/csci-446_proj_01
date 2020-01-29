@@ -114,6 +114,110 @@ public class ConstraintSolver
     //***************************************************
 
     //***************************************************
+    //*********Code for BackTracking w/ Fwd Check********
+    //NOTE: this algorithm will need an extra global var: ArrayList<Integer>[] possibleValues
+    //This will represent the possible legal color assignments for any given node, i.e. possibleValues[i] is an ArrayList of all the color vals that node i can be legally assigned
+
+    public void backtrackWithFwdCheck(Graph myGraph, int numColors)
+    {
+        prepare(myGraph.getNumNodes(), numColors);
+
+        //initialize possible values data structure
+        possibleValues = populatePossibleValues(myGraph);
+
+        btWithFwdCheckColor(getNextNode(myGraph), myGraph);
+
+        if (!hasSolution(myGraph)) cost *= -1;
+    }
+
+    private void btWithFwdCheckColor(int curNode, Graph myGraph)
+    {
+        cost++;
+        boolean foundColor = false;
+
+        //loop through the possible valid color assignments for the current node
+        for (Integer curColor : possibleValues[curNode])
+        {
+            cost++;
+
+            //check that this coloring is valid, using the additional look-ahead step to prune the search tree
+            //don't need to check if it causes conflicts, because we are already limiting the options to only valid colors
+            if (lookAhead(myGraph, curNode, curColor))
+            {
+                //nodeColors[curNode] = curColor
+                int nextNode = getNextNode(myGraph); //uses a heuristic function to pick the next node to color in order to speed up processing
+
+                if (nextNode < nodeColors.length) //check that the next node actually exists
+                {
+                    btWithFwdCheckColor(nextNode, myGraph); //recursively attempt to color the next node
+
+                    //test if we successfully assigned the next node a color
+                    //if so, then the coloring we just tried for curNode is good and the color was found!
+                    if (nodeColors[nextNode] != colorVals[0]) foundColor = true;
+                }
+                else
+                {
+                    foundColor = true;
+                }
+            }
+
+            //if we found a color assignment that works, stop trying any other ones
+            if (foundColor) break;
+        }
+
+        //if there wasn't a valid color for this node, set it back to uncolored (backtracking step)
+        if (!foundColor) resetNodeColor(myGraph, curNode);
+    }
+
+    private boolean lookAhead(Graph myGraph, int testNode, int testColor)
+    {
+        nodeColors[testNode] = testColor; //temporarily assign the test node with the test color - we're already guaranteed the test coloring won't cause any conflicts
+
+        ArrayList<Integer> neighborList = myGraph.getEdges(testNode);
+
+        //Check to make sure that each of the neighbors of the test node still have at least one valid variable assignment
+        for (Integer i : neighborList)
+        {
+            cost++;
+
+            //however, we only care about the neighbor node if it hasn't been assigned a color yet
+            if (nodeColors[i] == colorVals[0])
+            {
+                //get the possible valid colors for node i given the test coloring
+                possibleValues[i] = getPossibleValuesForNode(myGraph, i);
+            }
+
+            //if node i ended up with no valid colors, then the test color assignment failed the look-ahead
+            if (possibleValues[i].size() == 0)
+            {
+                resetNodeColor(myGraph, testNode); //reset the test node back to uncolored
+                return false;
+            }
+        }
+
+        //if we made it this far, then that means that all the test node's neighbors still have at least one valid color, so it passed the look-ahead
+        return true;
+    }
+
+    private void resetNodeColor(Graph myGraph, int theNode)
+    {
+        nodeColors[theNode] = colorVals[0]; //set the node to uncolored
+
+        ArrayList<Integer> neighborList = myGraph.getEdges(theNode);
+
+        //update the possible values of the node's neighbors, since this node is now uncolored
+        for (Integer j : neighborList)
+        {
+            cost++;
+            //if the neighbor isn't colored yet, update it's possible values
+            //(if it is colored, that indicates that somewhere in the recursion chain we're already looping through it's possible vals)
+            if (nodeColors[j] == colorVals[0]) possibleValues[j] = getPossibleValuesForNode(myGraph, j);
+        }
+    }
+    //*********End Code for BackTracking w/ Fwd Check****
+    //***************************************************
+
+    //***************************************************
     //*********Shared Backtracking Procedures************
     private boolean causesConflicts(Graph myGraph, int theNode, int newColor) //SHARED BACKTRACKING PROC
     {
@@ -151,6 +255,40 @@ public class ConstraintSolver
         if (nextNode < 0) nextNode = nodeColors.length;
         return nextNode;
     }
+
+    private ArrayList<Integer> getPossibleValuesForNode(Graph myGraph, int theNode) //SHARED BACKTRACKING PROC
+    {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        ArrayList<Integer> neighborList = myGraph.getEdges(theNode);
+
+        //loop through all possible colors and determine which ones are valid/possible for this node
+        for (int i = 1; i <= colorVals.length - 1; i++)
+        {
+            cost++;
+            boolean eligible = true;
+
+            //test if the current color is shared with any of the node's neighbors
+            if (causesConflicts(myGraph, theNode, colorVals[i])) eligible = false;
+            if (eligible) values.add(colorVals[i]);
+        }
+
+        return values;
+    }
+
+    private ArrayList<Integer>[] populatePossibleValues(Graph myGraph)
+    {
+        //initialize possible values data structure
+        ArrayList<Integer>[] retList = (ArrayList<Integer>[]) new ArrayList[myGraph.getNumNodes()];
+        for (int i = 0; i <= retList.length - 1; i++)
+        {
+            if (nodeColors[i] == colorVals[0]) retList[i] = getPossibleValuesForNode(myGraph, i);
+            else if (possibleValues[i] != null) retList[i] = possibleValues[i];
+		    else System.out.println("ERROR POPULATING POSSIBLE VALUES!");
+        }
+
+        return retList;
+    }
     //*********End Shared Backtracking Procedures********
     //***************************************************
+
 }
