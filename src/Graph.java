@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.*;
 
 public class Graph {
     private Point[] points;
@@ -18,6 +16,24 @@ public class Graph {
 
     public int getNumNodes() { return numNodes; }
     public ArrayList<Integer> getEdges(int theNode) { return edges[theNode]; }
+
+    public Queue<int[]> getAllEdges()
+    {
+        Queue<int[]> retVal = new LinkedList<int[]>();
+
+        for (int i = 0; i <= numNodes - 1; i++)
+        {
+            ArrayList<Integer> neighborList = edges[i];
+
+            for (Integer j : neighborList)
+            {
+                int[] edge = {i, j};
+                retVal.add(edge);
+            }
+        }
+
+        return retVal;
+    }
 
     private void buildGraph()
     {

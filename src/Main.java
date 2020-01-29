@@ -4,13 +4,17 @@ public class Main
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(100);
+	    Graph myGraph = new Graph(4);
 	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
         int numColors = 4;
 
         constraintSolver.backtrackWithFwdCheck(myGraph, numColors);
+        System.out.println(constraintSolver.getColoring());
+        System.out.println(constraintSolver.getCost());
+
+        constraintSolver.backtrackWithMAC(myGraph, numColors);
         System.out.println(constraintSolver.getColoring());
         System.out.println(constraintSolver.getCost());
 
