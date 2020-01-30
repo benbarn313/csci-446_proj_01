@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class ConstraintSolver
 {
@@ -115,7 +116,7 @@ public class ConstraintSolver
 
     //***************************************************
     //*********Code for BackTracking w/ Fwd Check********
-    //NOTE: this algorithm will need an extra global var: ArrayList<Integer>[] possibleValues
+    //NOTE: this algorithm uses an extra global var: ArrayList<Integer>[] possibleValues
     //This will represent the possible legal color assignments for any given node, i.e. possibleValues[i] is an ArrayList of all the color vals that node i can be legally assigned
 
     public void backtrackWithFwdCheck(Graph myGraph, int numColors)
@@ -218,6 +219,129 @@ public class ConstraintSolver
     //***************************************************
 
     //***************************************************
+    //*********Code for BackTracking w/ MAC**************
+    //NOTE: this algorithm uses an extra global var: ArrayList<Integer>[] possibleValues
+    //This will represent the possible legal color assignments for any given node, i.e. possibleValues[i] is an ArrayList of all the color vals that node i can be legally assigned
+
+    public void backtrackWithAC3(Graph myGraph, int numColors)
+    {
+        prepare(myGraph.getNumNodes(), numColors);
+
+        //initialize possible values data structure
+        possibleValues = populatePossibleValues(myGraph);
+
+        btWithAC3Color(getNextNode(myGraph), myGraph);
+
+        if (!hasSolution(myGraph)) cost *= -1;
+    }
+
+    private void btWithAC3Color(int curNode, Graph myGraph)
+    {
+        cost++;
+        boolean foundColor = false;
+
+        //loop through the possible valid color assignments for the current node
+        for (Integer curColor : possibleValues[curNode])
+        {
+            cost++;
+
+            //check if this coloring will maintain arc consistency after the effect has propagated through the constraints
+            //don't need to check if it causes conflicts, because we are already limiting the options to only valid colors
+            if (checkArcConsistency(myGraph, curNode, curColor))
+            {
+                int nextNode = getNextNode(myGraph);
+
+                if (nextNode < nodeColors.length) //check that the next node actually exists
+                {
+                    btWithAC3Color(nextNode, myGraph); //recursively attempt to color the next node
+
+                    //test if we successfully assigned the next node a color
+                    //if so, then the coloring we just tried for curNode is good and the color was found!
+                    if (nodeColors[nextNode] != colorVals[0]) foundColor = true;
+                }
+                else
+                {
+                    foundColor = true;
+                }
+            }
+
+            //if we found a color assignment that works, stop trying any other ones
+            if (foundColor) break;
+        }
+
+        //THIS PART MIGHT NOT BE RIGHT
+        //if there wasn't a valid color for this node, set it back to uncolored (backtracking step)
+        if (!foundColor)
+        {
+            nodeColors[curNode] = colorVals[0];
+            possibleValues = populatePossibleValues(myGraph);
+        }
+    }
+
+    private boolean checkArcConsistency(Graph myGraph, int testNode, int testColor)
+    {
+        nodeColors[testNode] = testColor; //temporarily assign the test node with the test color
+        ArrayList<Integer>[] tempPossibleVals = populatePossibleValues(myGraph);
+
+        Queue<int[]> allEdges = myGraph.getAllEdges();
+
+        while (allEdges.size() != 0)
+        {
+            cost++;
+            int[] curEdge = allEdges.poll();
+            int node1 = curEdge[0];
+            int node2 = curEdge[1];
+
+            //we're only concerned with testing arc consistency with unassigned (uncolored) nodes
+            if (nodeColors[node1] == colorVals[0] && nodeColors[node2] == colorVals[0])
+            {
+                boolean removed = false;
+                Object[] possibleValsArr = tempPossibleVals[node1].toArray();
+
+                for (int i = 0; i <= possibleValsArr.length - 1; i++)
+                {
+                    cost++;
+                    nodeColors[node1] = (Integer) possibleValsArr[i];
+                    ArrayList<Integer> node2NewPossVals = getPossibleValuesForNode(myGraph, node2);
+                    nodeColors[node1] = colorVals[0]; //undo temporary color assignment
+
+                    //if this potential coloring for node1 meant that node2 had no valid colors, then throw it out as a possibility for node1
+                    if (node2NewPossVals.size() == 0)
+                    {
+                        tempPossibleVals[node1].remove(possibleValsArr[i]);
+                        removed = true;
+                    }
+                }
+
+                //if we removed any possible values from node1, then we need to rerun the arc consistency check on its neighbors
+                if (removed)
+                {
+                    ArrayList<Integer> neighborList = myGraph.getEdges(node1);
+                    for (int j : neighborList)
+                    {
+                        int[] edge = {j, node1};
+                        allEdges.add(edge);
+                    }
+                }
+
+                //if there are no possible values for node1 that allow it to maintain arc consistency, then this test coloring has failed the check
+                if (tempPossibleVals[node1].size() == 0)
+                {
+                    nodeColors[testNode] = colorVals[0]; //undo temporary color assignment
+                    return false;
+                }
+            }
+        }
+
+        //if we got all the way here, that means that the proposed coloring maintains arc consistency in the graph!
+        //Also we trimmed the possible values way down
+        possibleValues = tempPossibleVals;
+        return true;
+    }
+    //*********End Code for BackTracking w/ MAC**********
+    //***************************************************
+
+    //***************************************************
     //*********Shared Backtracking Procedures************
     private boolean causesConflicts(Graph myGraph, int theNode, int newColor) //SHARED BACKTRACKING PROC
     {
@@ -281,6 +405,7 @@ public class ConstraintSolver
         ArrayList<Integer>[] retList = (ArrayList<Integer>[]) new ArrayList[myGraph.getNumNodes()];
         for (int i = 0; i <= retList.length - 1; i++)
         {
+            cost++;
             if (nodeColors[i] == colorVals[0]) retList[i] = getPossibleValuesForNode(myGraph, i);
             else if (possibleValues[i] != null) retList[i] = possibleValues[i];
 		    else System.out.println("ERROR POPULATING POSSIBLE VALUES!");
