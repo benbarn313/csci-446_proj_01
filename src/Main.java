@@ -4,7 +4,7 @@ public class Main
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(60);
+	    Graph myGraph = new Graph(50);
 	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
@@ -14,7 +14,7 @@ public class Main
         System.out.println(constraintSolver.getColoring());
         System.out.println(constraintSolver.getCost());
 
-        constraintSolver.backtrackWithMAC(myGraph, numColors);
+        constraintSolver.backtrackWithAC3(myGraph, numColors);
         System.out.println(constraintSolver.getColoring());
         System.out.println(constraintSolver.getCost());
 

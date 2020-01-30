@@ -223,19 +223,19 @@ public class ConstraintSolver
     //NOTE: this algorithm uses an extra global var: ArrayList<Integer>[] possibleValues
     //This will represent the possible legal color assignments for any given node, i.e. possibleValues[i] is an ArrayList of all the color vals that node i can be legally assigned
 
-    public void backtrackWithMAC(Graph myGraph, int numColors)
+    public void backtrackWithAC3(Graph myGraph, int numColors)
     {
         prepare(myGraph.getNumNodes(), numColors);
 
         //initialize possible values data structure
         possibleValues = populatePossibleValues(myGraph);
 
-        btWithMACColor(getNextNode(myGraph), myGraph);
+        btWithAC3Color(getNextNode(myGraph), myGraph);
 
         if (!hasSolution(myGraph)) cost *= -1;
     }
 
-    private void btWithMACColor(int curNode, Graph myGraph)
+    private void btWithAC3Color(int curNode, Graph myGraph)
     {
         cost++;
         boolean foundColor = false;
@@ -253,7 +253,7 @@ public class ConstraintSolver
 
                 if (nextNode < nodeColors.length) //check that the next node actually exists
                 {
-                    btWithMACColor(nextNode, myGraph); //recursively attempt to color the next node
+                    btWithAC3Color(nextNode, myGraph); //recursively attempt to color the next node
 
                     //test if we successfully assigned the next node a color
                     //if so, then the coloring we just tried for curNode is good and the color was found!
