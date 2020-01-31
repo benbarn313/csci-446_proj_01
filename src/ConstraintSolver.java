@@ -13,32 +13,7 @@ public class ConstraintSolver
 
     public long getCost() { return cost; }
     public long getStatesExamined() { return statesExamined; }
-
-    public String getColoring()
-    {
-        String retVal = "";
-        String line1 = "";
-        String line2 = "";
-
-        for (int i = 0; i <= nodeColors.length - 1; i++)
-        {
-            line1 += " " + String.format("%1$" + 3 + "s",i) + " ";
-            line2 += " " + String.format("%1$" + 3 + "s", colorMap(nodeColors[i])) + " ";
-        }
-
-        retVal = line1 + System.lineSeparator() + line2;
-        return retVal;
-    }
-
-    private String colorMap(int color)
-    {
-        if (color == 0) return "NA";
-        if (color == 1) return "R";
-        if (color == 2) return "B";
-        if (color == 3) return "G";
-        if (color == 4) return "Y";
-        return "XX";
-    }
+    public int[] getColoring() { return nodeColors; }
 
     private void prepare(int size, int numColors)
     {
@@ -459,6 +434,7 @@ public class ConstraintSolver
         }
 
         if (!hasSolution(myGraph)) cost = cost * -1;
+        statesExamined = numTries;
     }
 
     private boolean checkPopForSolution(Graph myGraph, int[][] population)

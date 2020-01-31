@@ -47,6 +47,7 @@ public class Graph {
             edgeTotal += edges[i].size();
         }
 
+        System.out.println("Number of nodes: " + getNumNodes());
         System.out.println("Number of edges: " + getAllEdges().size());
         System.out.println("Greatest number of edges on a node: " + mostEdges);
         System.out.println("Least number of edges on a node: " + leastEdges);
