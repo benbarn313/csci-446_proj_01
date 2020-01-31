@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class Main
 {
-    public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages
+    public static final int DEBUG_LEVEL = 1; //flag for triggering debug messages
 
     public static void main(String[] args)
     {
@@ -25,10 +25,11 @@ public class Main
             allGraphs[i - 1] = new Graph((i * 10) % 30 + 10);
             if (DEBUG_LEVEL >= 1)
             {
-                System.out.println("===== GRAPH " + i + " =====");
-                System.out.print(allGraphs[i]);
+                System.out.println("===== GRAPH " + (i - 1) + " =====");
+                System.out.print(allGraphs[i - 1]);
             }
         }
+
         for (int numColors = 4; numColors <= 4; numColors++)
         {
             allResults.get("simpleBacktrack").put(numColors, new Result[allGraphs.length]);

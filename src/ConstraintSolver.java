@@ -9,7 +9,7 @@ public class ConstraintSolver
     private int[] colorVals;
     private ArrayList<Integer>[] possibleValues;
 
-    public ConstraintSolver(){ };
+    public ConstraintSolver(){ }
 
     public long getCost() { return cost; }
     public long getStatesExamined() { return statesExamined; }
@@ -412,7 +412,7 @@ public class ConstraintSolver
 
         while (numTries < maxTries && !checkPopForSolution(myGraph, population))
         {
-            if (Main.DEBUG_LEVEL >= 1) System.out.println("try " + numTries + ": " + getTotalPopFitness(myGraph, population));
+            if (Main.DEBUG_LEVEL >= 2) System.out.println("try " + numTries + ": " + getTotalPopFitness(myGraph, population));
             numTries++;
             cost++;
 
@@ -422,7 +422,7 @@ public class ConstraintSolver
             int[][] children = makeChildren(parent1, parent2);
             mutate(children);
 
-            if (Main.DEBUG_LEVEL >= 2)
+            if (Main.DEBUG_LEVEL >= 3)
             {
                 System.out.println("Parent 1 - " + countTotalConflicts(myGraph, parent1));
                 System.out.println("Parent 2 - " + countTotalConflicts(myGraph, parent2));
@@ -562,14 +562,14 @@ public class ConstraintSolver
                 Random randGen = new Random();
                 int replacement = (int) possibleReplacements.toArray()[randGen.nextInt(possibleReplacements.size())];
 
-                if (Main.DEBUG_LEVEL >= 2) System.out.println("Replacing member " + replacement
+                if (Main.DEBUG_LEVEL >= 3) System.out.println("Replacing member " + replacement
                         + " (" + countTotalConflicts(myGraph, population[replacement]) + ") with child " + i + " (" + countTotalConflicts(myGraph, children[i]) + ")");
                 population[replacement] = children[i];
                 replacementIndexes.add(replacement);
             }
         }
 
-        if (Main.DEBUG_LEVEL >= 1) System.out.println(replacementIndexes.size() + " members replaced");
+        if (Main.DEBUG_LEVEL >= 2) System.out.println(replacementIndexes.size() + " members replaced");
     }
 
     private int countTotalConflicts(Graph myGraph, int[] coloring)

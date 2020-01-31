@@ -63,7 +63,7 @@ public class Graph {
         //priority queues to determine closest neighbor
         PriorityQueue<LineSegment>[] neighborQueues = populateQueues();
         //code to print the queue array for debugging; blocks graph creation
-        if (Main.DEBUG_LEVEL >= 2) printQueues(populateQueues());
+        if (Main.DEBUG_LEVEL >= 3) printQueues(populateQueues());
 
         boolean breakLoop = false;
         ArrayList<LineSegment> allSegments = new ArrayList<LineSegment>();
