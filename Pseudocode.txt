@@ -561,6 +561,154 @@ getNextNode(Graph myGraph) //SHARED BACKTRACKING PROC
 //*********End Code for BackTracking w/ MAC**********
 //***************************************************	
 
+//***************************************************
+//*********Code for Genetic Algorithm****************
+
+localSearchGeneticAlgorithm(Graph myGraph, int numColors)
+{
+	prepare(myGraph.getNumNodes(), numColors)
+	
+	int populationSize = 20
+	int[][] popuplation = new int[populationSize][myGraph.getNumnodes()]
+	
+	//Randomly generate the population
+	for i = 0 to populationSize - 1
+		population[i] = makeRandomColoring(population[i].length)
+	end loop
+	
+	long numTries = 0
+	
+	while numTries < maxTries
+		numTries++
+		cost++
+		
+		int[] parent1 = selectParentFromPopulation(population)
+		int[] parent2 = selectParentFromPopulation(population)
+		
+		int[][] children = makeChildren(parent1, parent2)
+		mutate(children)
+		replaceInPopulation(population, children)
+	end loop
+	
+	if not(hasSolution(myGraph)) cost = cost * -1;
+}
+
+//Procedure to pick a parent at random from the population, using tournament selection
+int[] selectParentFromPopulation(int[][] population)
+{
+	Random randGen
+	int tournamentSize = 2
+	int bestFitness = -1, newParent = -1 //set to -1 to trigger initial setting of values
+	
+	//randomly select the best parent, trying as many times as specified by the tournament size
+	for i = 1 to tournamentSize		
+		nextPar = randGen.nextInt between 0 and population.length - 1
+		nextFitness = countTotalConflicts(myGraph, population[nextPar]) //fitness function is total number of conflicts
+		
+		//if the parent we selected is the most fit one so far, then use it as the new parent
+		if (bestFitness < 0 || nextFitness < bestFitness) then
+			bestFitness = nextFitness
+			newParent = nextPar
+		end if
+	end loop
+	
+	return population[newParent];
+}
+
+int[][] makeChildren(int[] parent1, int[] parent2)
+{
+	//hardcoded to handle making 2 children
+	int[][] retVal = new int[2][parent1.length]
+	Random randGen
+	int splitPoint = randGen.nextInt between 0 and parent1.length - 1
+	
+	//one-point crossover to generate children
+	for int i = 0 to splitPoint - 1
+		cost++
+		retVal[0][i] = parent1[i]
+		retVal[1][i] = parent2[i]
+	end loop
+	
+	for int i = splitPoint to parent1.length - 1
+		cost++
+		retVal[0][i] = parent2[i]
+		retVal[1][i] = parent1[i]
+	end loop
+	
+	return retVal
+}
+
+mutate(int[][] children)
+{
+	double mutationChance = .001
+	Rand randGen
+	
+	//Mutate the children by randomly deciding whether to assign a node in the graph a new random color
+	for i = 0 to children.length - 1
+		for j = 0 to children[i].length - 1
+			cost++
+			if randGen.nextDouble < mutationChance then children[i][j] = randGen.nextInt between 1 and colorVals.length - 1
+		end loop
+	end loop
+}
+
+//Procedure to put the children back in the population, using steady-state replacement
+replace(Graph myGraph, int[][] population, int[][] children)
+{
+	//loop through the children
+	for int i = 0 to children.length - 1
+		int curKidFitness = countTotalConflicts(myGraph, children[i])
+		int bestCandidate = -1
+		int bestCandidateFitness
+		
+		//compare the child to the rest of the population members
+		for int j = 0 to population.length - 1
+			cost++
+			int curMemFitness = countTotalConflicts(myGraph, population[j])
+			
+			//if this child is more fit then one of the population members, and this is the least fit population member we've seen so far, then flag it for replacement
+			if curMemFitness >= curKidFitness and (curMemFitness > bestCandidateFitness or bestCandidate == -1) then
+				bestCandidate = j
+				bestCandidateFitness = curMemFitness
+			end if
+		end loop
+		
+		if bestCandidate > 0 then population[bestCandidate] = children[i]
+	end loop
+}
+
+int countTotalConflicts(Graph myGraph, int[] coloring)
+{
+	retVal = 0
+	
+	for i = 0 to coloring.length - 1
+		cost++
+		neighborList = myGraph.getEdges(i)
+		
+		for each j in neighborList
+			cost++
+			if nodeColors[i] != colorVal[0] && nodeColors[i] = nodeColors[j] then retVal++
+		end loop
+	end loop
+	
+	return retVal
+}
+
+int[] makeRandomColoring(int size)
+{
+	int retVals = new int[size]
+	Random randGen
+	
+	for int i = 0 to retVals.length - 1
+		retVals[i] = randGen.nextInt between 1 and colorVals.length - 1
+	end loop
+	
+	return retVals
+}
+
+//*********Code for Genetic Algorithm****************
+//***************************************************
+
 	
 //***************************************************
 //*********Code for Main Testing Proc****************
