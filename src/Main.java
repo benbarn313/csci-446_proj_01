@@ -4,10 +4,10 @@ public class Main
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(90);
-	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
+	Graph myGraph = new Graph(20);
+	if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
-	    ConstraintSolver constraintSolver = new ConstraintSolver();
+	ConstraintSolver constraintSolver = new ConstraintSolver();
         int numColors = 4;
 
         constraintSolver.backtrackWithFwdCheck(myGraph, numColors);
@@ -18,10 +18,13 @@ public class Main
         System.out.println(constraintSolver.getColoring());
         System.out.println("States: " + constraintSolver.getStatesExamined() + " | Cost: " + constraintSolver.getCost());
 
-	    constraintSolver.simpleBacktrack(myGraph, numColors);
-	    System.out.println(constraintSolver.getColoring());
+	constraintSolver.simpleBacktrack(myGraph, numColors);
+	System.out.println(constraintSolver.getColoring());
         System.out.println("States: " + constraintSolver.getStatesExamined() + " | Cost: " + constraintSolver.getCost());
 
+        constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
+        System.out.println(constraintSolver.getColoring());
+        System.out.println(constraintSolver.getCost());
         myGraph.printStats();
     }
 }
