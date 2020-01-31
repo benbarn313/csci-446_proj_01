@@ -47,12 +47,14 @@ public class Graph {
             edgeTotal += edges[i].size();
         }
 
+        double avgEdges = edgeTotal / (double) numNodes;
+
         System.out.println("Number of nodes: " + getNumNodes());
         System.out.println("Number of edges: " + getAllEdges().size());
         System.out.println("Greatest number of edges on a node: " + mostEdges);
         System.out.println("Least number of edges on a node: " + leastEdges);
-        System.out.println("Average number of edges per node: " + (edgeTotal / numNodes));
-        System.out.println("Number of islands: " + islands);
+        System.out.println("Average number of edges per node: " + String.format("%.2f", avgEdges));
+        if (islands > 0) System.out.println("Number of islands: " + islands);
     }
 
     private void buildGraph()

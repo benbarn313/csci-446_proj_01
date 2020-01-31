@@ -12,7 +12,7 @@ public class Main
 	    Dictionary<String, Dictionary<Integer, Result[]>> allResults = new Hashtable<>();
         LocalDateTime start, stop;
         String algName;
-        Graph allGraphs[] = new Graph[10];
+        Graph allGraphs[] = new Graph[5];
 
         //populate results dictionaries
         allResults.put("simpleBacktrack", new Hashtable<>());
@@ -22,7 +22,7 @@ public class Main
 
         for (int i = 1; i <= allGraphs.length; i++)
         {
-            allGraphs[i - 1] = new Graph((i * 10) % 30 + 10);
+            allGraphs[i - 1] = new Graph(i * 10);
             if (DEBUG_LEVEL >= 1)
             {
                 System.out.println("===== GRAPH " + (i - 1) + " =====");
