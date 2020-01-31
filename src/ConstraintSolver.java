@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class ConstraintSolver
 {
-    private long cost;
+    private long cost, statesExamined;
     private int[] nodeColors;
     private int[] colorVals;
     private ArrayList<Integer>[] possibleValues;
@@ -12,36 +12,13 @@ public class ConstraintSolver
     public ConstraintSolver(){ };
 
     public long getCost() { return cost; }
-
-    public String getColoring()
-    {
-        String retVal = "";
-        String line1 = "";
-        String line2 = "";
-
-        for (int i = 0; i <= nodeColors.length - 1; i++)
-        {
-            line1 += " " + String.format("%1$" + 3 + "s",i) + " ";
-            line2 += " " + String.format("%1$" + 3 + "s", colorMap(nodeColors[i])) + " ";
-        }
-
-        retVal = line1 + System.lineSeparator() + line2;
-        return retVal;
-    }
-
-    private String colorMap(int color)
-    {
-        if (color == 0) return "NA";
-        if (color == 1) return "R";
-        if (color == 2) return "B";
-        if (color == 3) return "G";
-        if (color == 4) return "Y";
-        return "XX";
-    }
+    public long getStatesExamined() { return statesExamined; }
+    public int[] getColoring() { return nodeColors; }
 
     private void prepare(int size, int numColors)
     {
         cost = 0;
+        statesExamined = 0;
         nodeColors = new int[size];
         colorVals = new int[numColors + 1];
 
@@ -93,6 +70,7 @@ public class ConstraintSolver
             if (!causesConflicts(myGraph, curNode, colorVals[i]))
             {
                 nodeColors[curNode] = colorVals[i];
+                statesExamined++;
                 int nextNode = getNextNode(myGraph); //uses a heuristic function to pick the next node to color in order to speed up processing
 
                 if (nextNode < nodeColors.length) //check that the next node actually exists
@@ -146,7 +124,7 @@ public class ConstraintSolver
             //don't need to check if it causes conflicts, because we are already limiting the options to only valid colors
             if (lookAhead(myGraph, curNode, curColor))
             {
-                //nodeColors[curNode] = curColor
+                statesExamined++;
                 int nextNode = getNextNode(myGraph); //uses a heuristic function to pick the next node to color in order to speed up processing
 
                 if (nextNode < nodeColors.length) //check that the next node actually exists
@@ -250,6 +228,7 @@ public class ConstraintSolver
             //don't need to check if it causes conflicts, because we are already limiting the options to only valid colors
             if (checkArcConsistency(myGraph, curNode, curColor))
             {
+                statesExamined++;
                 int nextNode = getNextNode(myGraph);
 
                 if (nextNode < nodeColors.length) //check that the next node actually exists
@@ -455,6 +434,7 @@ public class ConstraintSolver
         }
 
         if (!hasSolution(myGraph)) cost = cost * -1;
+        statesExamined = numTries;
     }
 
     private boolean checkPopForSolution(Graph myGraph, int[][] population)

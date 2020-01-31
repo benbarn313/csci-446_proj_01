@@ -1,29 +1,114 @@
+import java.time.LocalDateTime;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 public class Main
 {
-    public static final int DEBUG_LEVEL = 1; //flag for triggering debug messages
+    public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(20);
-	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
-
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
-        int numColors = 4;
+	    Dictionary<String, Dictionary<Integer, Result[]>> allResults = new Hashtable<>();
+        LocalDateTime start, stop;
+        String algName;
+        Graph allGraphs[] = new Graph[10];
 
-        constraintSolver.backtrackWithFwdCheck(myGraph, numColors);
-        System.out.println(constraintSolver.getColoring());
-        System.out.println(constraintSolver.getCost());
+        //populate results dictionaries
+        allResults.put("simpleBacktrack", new Hashtable<>());
+        allResults.put("backtrackWithFwdCheck", new Hashtable<>());
+        allResults.put("backtrackWithAC3", new Hashtable<>());
+        allResults.put("geneticAlgorithm", new Hashtable<>());
 
-        constraintSolver.backtrackWithAC3(myGraph, numColors);
-        System.out.println(constraintSolver.getColoring());
-        System.out.println(constraintSolver.getCost());
+        for (int i = 1; i <= allGraphs.length; i++)
+        {
+            allGraphs[i - 1] = new Graph((i * 10) % 30 + 10);
+            if (DEBUG_LEVEL >= 1)
+            {
+                System.out.println("===== GRAPH " + i + " =====");
+                System.out.print(allGraphs[i]);
+            }
+        }
+        for (int numColors = 4; numColors <= 4; numColors++)
+        {
+            allResults.get("simpleBacktrack").put(numColors, new Result[allGraphs.length]);
+            allResults.get("backtrackWithFwdCheck").put(numColors, new Result[allGraphs.length]);
+            allResults.get("backtrackWithAC3").put(numColors, new Result[allGraphs.length]);
+            allResults.get("geneticAlgorithm").put(numColors, new Result[allGraphs.length]);
 
-	    constraintSolver.simpleBacktrack(myGraph, numColors);
-	    System.out.println(constraintSolver.getColoring());
-	    System.out.println(constraintSolver.getCost());
+            for (int i = 0; i <= allGraphs.length - 1; i++)
+            {
+                Graph myGraph = allGraphs[i];
 
-        constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
-        System.out.println(constraintSolver.getColoring());
-        System.out.println(constraintSolver.getCost());
+                System.out.println(System.lineSeparator() + "===== GRAPH " + i + " =====");
+                myGraph.printStats();
+                System.out.println();
+
+                algName = "simpleBacktrack";
+                start = java.time.LocalDateTime.now();
+
+                System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
+                System.out.println("...");
+
+                constraintSolver.simpleBacktrack(myGraph, numColors);
+
+                stop = java.time.LocalDateTime.now();
+                System.out.println("Stopped " + algName + " at " + stop);
+
+                allResults.get(algName).get(numColors)[i] = new Result(constraintSolver.getCost(), constraintSolver.getStatesExamined(),
+                        constraintSolver.getColoring(), start, stop);
+                if (DEBUG_LEVEL >= 1) System.out.println(allResults.get(algName).get(numColors)[i].getColoring());
+                System.out.println(allResults.get(algName).get(numColors)[i]);
+                System.out.println("==========================");
+
+                algName = "backtrackWithFwdCheck";
+                start = java.time.LocalDateTime.now();
+                System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
+                System.out.println("...");
+
+                constraintSolver.backtrackWithFwdCheck(myGraph, numColors);
+
+                stop = java.time.LocalDateTime.now();
+                System.out.println("Stopped " + algName + " at " + stop);
+
+                allResults.get(algName).get(numColors)[i] = new Result(constraintSolver.getCost(), constraintSolver.getStatesExamined(),
+                        constraintSolver.getColoring(), start, stop);
+                if (DEBUG_LEVEL >= 1) System.out.println(allResults.get(algName).get(numColors)[i].getColoring());
+                System.out.println(allResults.get(algName).get(numColors)[i]);
+                System.out.println("==========================");
+
+                algName = "backtrackWithAC3";
+                start = java.time.LocalDateTime.now();
+                System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
+                System.out.println("...");
+
+                constraintSolver.backtrackWithAC3(myGraph, numColors);
+
+                stop = java.time.LocalDateTime.now();
+                System.out.println("Stopped " + algName + " at " + stop);
+
+                allResults.get(algName).get(numColors)[i] = new Result(constraintSolver.getCost(), constraintSolver.getStatesExamined(),
+                        constraintSolver.getColoring(), start, stop);
+                if (DEBUG_LEVEL >= 1) System.out.println(allResults.get(algName).get(numColors)[i].getColoring());
+                System.out.println(allResults.get(algName).get(numColors)[i]);
+                System.out.println("==========================");
+
+                algName = "geneticAlgorithm";
+                start = java.time.LocalDateTime.now();
+                System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
+                System.out.println("...");
+
+                constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
+
+                stop = java.time.LocalDateTime.now();
+                System.out.println("Stopped " + algName + " at " + stop);
+
+                allResults.get(algName).get(numColors)[i] = new Result(constraintSolver.getCost(), constraintSolver.getStatesExamined(),
+                        constraintSolver.getColoring(), start, stop);
+                if (DEBUG_LEVEL >= 1) System.out.println(allResults.get(algName).get(numColors)[i].getColoring());
+                System.out.println(allResults.get(algName).get(numColors)[i]);
+                System.out.println("==========================");
+            }
+        }
     }
 }

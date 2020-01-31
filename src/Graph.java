@@ -35,6 +35,26 @@ public class Graph {
         return retVal;
     }
 
+    public void printStats()
+    {
+        int mostEdges = -1, leastEdges = -1, islands = 0, edgeTotal = 0;
+
+        for (int i = 0; i <= numNodes - 1; i++)
+        {
+            if (edges[i].size() > mostEdges) mostEdges = edges[i].size();
+            if (edges[i].size() < leastEdges || leastEdges == -1) leastEdges = edges[i].size();
+            if (edges[i].size() == 0) islands++;
+            edgeTotal += edges[i].size();
+        }
+
+        System.out.println("Number of nodes: " + getNumNodes());
+        System.out.println("Number of edges: " + getAllEdges().size());
+        System.out.println("Greatest number of edges on a node: " + mostEdges);
+        System.out.println("Least number of edges on a node: " + leastEdges);
+        System.out.println("Average number of edges per node: " + (edgeTotal / numNodes));
+        System.out.println("Number of islands: " + islands);
+    }
+
     private void buildGraph()
     {
         //populate the points
@@ -138,7 +158,7 @@ public class Graph {
             if (thePoint.equals(points[i])) return i;
         }
         return -1;
-}
+    }
 
     private void printQueues(PriorityQueue[] theQueues)
     {
