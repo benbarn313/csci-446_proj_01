@@ -1,6 +1,6 @@
 public class Main
 {
-    public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages
+    public static final int DEBUG_LEVEL = 1; //flag for triggering debug messages
 
     public static void main(String[] args)
     {

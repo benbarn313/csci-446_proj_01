@@ -548,7 +548,7 @@ public class ConstraintSolver
         for (int i = 0; i <= children.length - 1; i++)
         {
             int curKidFitness = countTotalConflicts(myGraph, children[i]);
-            int bestCandidate = -1, bestCandidateFitness = -1;
+            int bestCandidateFitness = -1;
             ArrayList<Integer> possibleReplacements = new ArrayList<>();
 
             //compare the child to the rest of the population members
@@ -561,10 +561,9 @@ public class ConstraintSolver
                 if (curMemFitness > curKidFitness || (curMemFitness >= curKidFitness && !replacementIndexes.contains(j)))
                 {
                     //Test if this is the least fit population member we've seen so far (or if we need to initialize the possibilites)
-                    if (curMemFitness > bestCandidateFitness || bestCandidate == -1)
+                    if (curMemFitness > bestCandidateFitness || bestCandidateFitness == -1)
                     {
                         //if so, empty out the list of possibilites and restart it with just the least fit population member
-                        bestCandidate = j;
                         bestCandidateFitness = curMemFitness;
                         possibleReplacements.clear();
                         possibleReplacements.add(j);
