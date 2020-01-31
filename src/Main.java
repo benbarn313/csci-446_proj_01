@@ -4,7 +4,7 @@ public class Main
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(50);
+	    Graph myGraph = new Graph(7);
 	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
@@ -22,7 +22,9 @@ public class Main
 	    System.out.println(constraintSolver.getColoring());
 	    System.out.println(constraintSolver.getCost());
 
-        test();
+        //constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
+        //System.out.println(constraintSolver.getColoring());
+        //System.out.println(constraintSolver.getCost());
     }
 
     private static void test()

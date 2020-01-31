@@ -706,7 +706,7 @@ int[] makeRandomColoring(int size)
 	return retVals
 }
 
-//*********Code for Genetic Algorithm****************
+//*********End Code for Genetic Algorithm************
 //***************************************************
 
 	

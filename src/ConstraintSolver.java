@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Random;
 
 public class ConstraintSolver
 {
@@ -416,5 +417,191 @@ public class ConstraintSolver
     //*********End Shared Backtracking Procedures********
     //***************************************************
 
+    //***************************************************
+    //*********Code for Genetic Algorithm****************
+    public void localSearchGeneticAlgorithm(Graph myGraph, int numColors)
+    {
+        prepare(myGraph.getNumNodes(), numColors);
 
+        int populationSize = 20;
+        int[][] population = new int[populationSize][myGraph.getNumNodes()];
+
+        //Randomly generate the population
+        for (int i = 0; i <= populationSize - 1; i++) population[i] = makeRandomColoring(population[i].length);
+        long numTries = 0;
+        long maxTries = 100000000;
+        boolean solutionFound = false;
+
+        for (int i = 0; i <= population.length - 1; i++) //initial check to make sure population didn't accidentally satisfy constraints
+        {
+            cost++;
+            nodeColors = population[i];
+            if (hasSolution(myGraph))
+            {
+                solutionFound = true;
+                break;
+            }
+        }
+
+        while (numTries < maxTries && !solutionFound)
+        {
+            numTries++;
+            cost++;
+
+            int[] parent1 = selectParentFromPopulation(myGraph, population);
+            int[] parent2 = selectParentFromPopulation(myGraph, population);
+
+            int[][] children = makeChildren(parent1, parent2);
+            mutate(children);
+            replaceInPopulation(myGraph, population, children);
+
+            for (int i = 0; i <= population.length - 1; i++) //check to make sure population didn't accidentally satisfy constraints
+            {
+                cost++;
+                nodeColors = population[i];
+                if (hasSolution(myGraph))
+                {
+                    solutionFound = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasSolution(myGraph)) cost = cost * -1;
+    }
+
+    //Procedure to pick a parent at random from the population, using tournament selection
+    private int[] selectParentFromPopulation(Graph myGraph, int[][] population)
+    {
+        Random randGen = new Random();
+        int tournamentSize = 2;
+        int bestFitness = -1, newParent = -1; //set to -1 to trigger initial setting of values
+
+        //randomly select the best parent, trying as many times as specified by the tournament size
+        for (int i = 1; i <= tournamentSize; i++)
+        {
+            cost++;
+            int nextPar = randGen.nextInt(population.length);
+            int nextFitness = countTotalConflicts(myGraph, population[nextPar]); //fitness function is total number of conflicts
+
+            //if the parent we selected is the most fit one so far, then use it as the new parent
+            if (newParent < 0 || nextFitness < bestFitness)
+            {
+                bestFitness = nextFitness;
+                newParent = nextPar;
+            }
+        }
+
+        return population[newParent];
+    }
+
+    private int[][] makeChildren(int[] parent1, int[] parent2)
+    {
+        //hardcoded to handle making 2 children
+        int[][] retVal = new int[2][parent1.length];
+        Random randGen = new Random();
+        int splitPoint = randGen.nextInt(parent1.length - 1) + 1;
+
+        //one-point crossover to generate children
+        for (int i = 0; i <= splitPoint - 1; i++)
+        {
+            cost++;
+            retVal[0][i] = parent1[i];
+            retVal[1][i] = parent2[i];
+        }
+
+        for (int i = splitPoint; i <= parent1.length - 1; i++)
+        {
+            cost++;
+            retVal[0][i] = parent2[i];
+            retVal[1][i] = parent1[i];
+        }
+
+        return retVal;
+    }
+
+    private void mutate(int[][] children)
+    {
+        double mutationChance = .01;
+        Random randGen = new Random();
+
+        //Mutate the children by randomly deciding whether to assign a node in the graph a new random color
+        for (int i = 0; i <= children.length - 1; i++)
+        {
+            for (int j = 0; j <= children[i].length - 1; j++)
+            {
+                cost++;
+                if (randGen.nextDouble() < mutationChance)
+                {
+                    int newColor;
+                    do { newColor = randGen.nextInt(colorVals.length - 1) + 1; } while (newColor == children[i][j]);
+                    children[i][j] = newColor;
+                }
+            }
+        }
+    }
+
+    //Procedure to put the children back in the population, using steady-state replacement
+    private void replaceInPopulation(Graph myGraph, int[][] population, int[][] children)
+    {
+        //loop through the children
+        for (int i = 0; i <= children.length - 1; i++)
+        {
+            int curKidFitness = countTotalConflicts(myGraph, children[i]);
+            int bestCandidate = -1;
+            int bestCandidateFitness = -1;
+
+            //compare the child to the rest of the population members
+            for (int j = 0; j <= population.length - 1; j++)
+            {
+                cost++;
+                int curMemFitness = countTotalConflicts(myGraph, population[j]);
+
+                //if this child is more fit then one of the population members,
+                //and this is the least fit population member we've seen so far, then flag it for replacement
+                if (curMemFitness >= curKidFitness && (curMemFitness > bestCandidateFitness || bestCandidate == -1))
+                {
+                    bestCandidate = j;
+                    bestCandidateFitness = curMemFitness;
+                }
+            }
+
+            //if we found a candidate for replacement, then replace it with this child
+            if (bestCandidate > 0)  population[bestCandidate] = children[i];
+        }
+    }
+
+    private int countTotalConflicts(Graph myGraph, int[] coloring)
+    {
+        int retVal = 0;
+
+        for (int i = 0; i <= coloring.length - 1; i++)
+        {
+            cost++;
+            ArrayList<Integer> neighborList = myGraph.getEdges(i);
+
+            for (int j : neighborList)
+            {
+                cost++;
+                if (coloring[i] != colorVals[0] && coloring[i] == coloring[j]) retVal++;
+            }
+        }
+
+        return retVal;
+    }
+
+    private int[] makeRandomColoring(int size)
+    {
+        int[] retVals = new int[size];
+        Random randGen = new Random();
+
+        for (int i = 0; i <= retVals.length - 1; i++)
+        {
+            retVals[i] = randGen.nextInt(colorVals.length - 1) + 1;
+        }
+
+        return retVals;
+    }
+    //*********End Code for Genetic Algorithm************
+    //***************************************************
 }
