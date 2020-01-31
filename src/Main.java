@@ -1,10 +1,10 @@
 public class Main
 {
-    public static final int DEBUG_LEVEL = 1; //flag for triggering debug messages
+    public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages
 
     public static void main(String[] args)
     {
-	    Graph myGraph = new Graph(7);
+	    Graph myGraph = new Graph(90);
 	    if (DEBUG_LEVEL >= 1) System.out.print(myGraph);
 
 	    ConstraintSolver constraintSolver = new ConstraintSolver();
@@ -22,9 +22,9 @@ public class Main
 	    System.out.println(constraintSolver.getColoring());
 	    System.out.println(constraintSolver.getCost());
 
-        //constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
-        //System.out.println(constraintSolver.getColoring());
-        //System.out.println(constraintSolver.getCost());
+        constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
+        System.out.println(constraintSolver.getColoring());
+        System.out.println(constraintSolver.getCost());
     }
 
     private static void test()

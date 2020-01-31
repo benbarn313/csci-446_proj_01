@@ -430,21 +430,10 @@ public class ConstraintSolver
         for (int i = 0; i <= populationSize - 1; i++) population[i] = makeRandomColoring(population[i].length);
         long numTries = 0;
         long maxTries = 100000000;
-        boolean solutionFound = false;
 
-        for (int i = 0; i <= population.length - 1; i++) //initial check to make sure population didn't accidentally satisfy constraints
+        while (numTries < maxTries && !checkPopForSolution(myGraph, population))
         {
-            cost++;
-            nodeColors = population[i];
-            if (hasSolution(myGraph))
-            {
-                solutionFound = true;
-                break;
-            }
-        }
-
-        while (numTries < maxTries && !solutionFound)
-        {
+            if (Main.DEBUG_LEVEL >= 1) System.out.println("try " + numTries + ": " + getTotalPopFitness(myGraph, population));
             numTries++;
             cost++;
 
@@ -453,21 +442,30 @@ public class ConstraintSolver
 
             int[][] children = makeChildren(parent1, parent2);
             mutate(children);
-            replaceInPopulation(myGraph, population, children);
 
-            for (int i = 0; i <= population.length - 1; i++) //check to make sure population didn't accidentally satisfy constraints
+            if (Main.DEBUG_LEVEL >= 2)
             {
-                cost++;
-                nodeColors = population[i];
-                if (hasSolution(myGraph))
-                {
-                    solutionFound = true;
-                    break;
-                }
+                System.out.println("Parent 1 - " + countTotalConflicts(myGraph, parent1));
+                System.out.println("Parent 2 - " + countTotalConflicts(myGraph, parent2));
+                System.out.println("Kid 1 - " + countTotalConflicts(myGraph, children[0]));
+                System.out.println("Kid 2 - " + countTotalConflicts(myGraph, children[1]));
             }
+
+            mergeIntoPopulation(myGraph, population, children);
         }
 
         if (!hasSolution(myGraph)) cost = cost * -1;
+    }
+
+    private boolean checkPopForSolution(Graph myGraph, int[][] population)
+    {
+        for (int i = 0; i <= population.length - 1; i++) //check to make sure population didn't accidentally satisfy constraints
+        {
+            cost++;
+            nodeColors = population[i];
+            if (hasSolution(myGraph)) return true;
+        }
+        return false;
     }
 
     //Procedure to pick a parent at random from the population, using tournament selection
@@ -500,7 +498,7 @@ public class ConstraintSolver
         //hardcoded to handle making 2 children
         int[][] retVal = new int[2][parent1.length];
         Random randGen = new Random();
-        int splitPoint = randGen.nextInt(parent1.length - 1) + 1;
+        int splitPoint = randGen.nextInt(parent1.length) ;
 
         //one-point crossover to generate children
         for (int i = 0; i <= splitPoint - 1; i++)
@@ -534,7 +532,7 @@ public class ConstraintSolver
                 if (randGen.nextDouble() < mutationChance)
                 {
                     int newColor;
-                    do { newColor = randGen.nextInt(colorVals.length - 1) + 1; } while (newColor == children[i][j]);
+                    do { newColor = colorVals[randGen.nextInt(colorVals.length - 1) + 1]; } while (newColor == children[i][j]);
                     children[i][j] = newColor;
                 }
             }
@@ -542,14 +540,16 @@ public class ConstraintSolver
     }
 
     //Procedure to put the children back in the population, using steady-state replacement
-    private void replaceInPopulation(Graph myGraph, int[][] population, int[][] children)
+    private void mergeIntoPopulation(Graph myGraph, int[][] population, int[][] children)
     {
+        ArrayList<Integer> replacementIndexes = new ArrayList<>();
+
         //loop through the children
         for (int i = 0; i <= children.length - 1; i++)
         {
             int curKidFitness = countTotalConflicts(myGraph, children[i]);
-            int bestCandidate = -1;
-            int bestCandidateFitness = -1;
+            int bestCandidate = -1, bestCandidateFitness = -1;
+            ArrayList<Integer> possibleReplacements = new ArrayList<>();
 
             //compare the child to the rest of the population members
             for (int j = 0; j <= population.length - 1; j++)
@@ -557,23 +557,45 @@ public class ConstraintSolver
                 cost++;
                 int curMemFitness = countTotalConflicts(myGraph, population[j]);
 
-                //if this child is more fit then one of the population members,
-                //and this is the least fit population member we've seen so far, then flag it for replacement
-                if (curMemFitness >= curKidFitness && (curMemFitness > bestCandidateFitness || bestCandidate == -1))
+                //test if this child is more fit then one of the population members, and that it's not one of the children we just plugged in
+                if (curMemFitness > curKidFitness || (curMemFitness >= curKidFitness && !replacementIndexes.contains(j)))
                 {
-                    bestCandidate = j;
-                    bestCandidateFitness = curMemFitness;
+                    //Test if this is the least fit population member we've seen so far (or if we need to initialize the possibilites)
+                    if (curMemFitness > bestCandidateFitness || bestCandidate == -1)
+                    {
+                        //if so, empty out the list of possibilites and restart it with just the least fit population member
+                        bestCandidate = j;
+                        bestCandidateFitness = curMemFitness;
+                        possibleReplacements.clear();
+                        possibleReplacements.add(j);
+                    }
+                    else if (curMemFitness == bestCandidateFitness)
+                    {
+                        //if the current member's fitness is equal to the least fit one, then add it as a possibility
+                        possibleReplacements.add(j);
+                    }
                 }
             }
 
             //if we found a candidate for replacement, then replace it with this child
-            if (bestCandidate > 0)  population[bestCandidate] = children[i];
+            if (possibleReplacements.size() > 0)
+            {
+                Random randGen = new Random();
+                int replacement = (int) possibleReplacements.toArray()[randGen.nextInt(possibleReplacements.size())];
+
+                if (Main.DEBUG_LEVEL >= 2) System.out.println("Replacing member " + replacement
+                        + " (" + countTotalConflicts(myGraph, population[replacement]) + ") with child " + i + " (" + countTotalConflicts(myGraph, children[i]) + ")");
+                population[replacement] = children[i];
+                replacementIndexes.add(replacement);
+            }
         }
+
+        if (Main.DEBUG_LEVEL >= 1) System.out.println(replacementIndexes.size() + " members replaced");
     }
 
     private int countTotalConflicts(Graph myGraph, int[] coloring)
     {
-        int retVal = 0;
+        int totalConflicts = 0;
 
         for (int i = 0; i <= coloring.length - 1; i++)
         {
@@ -583,11 +605,11 @@ public class ConstraintSolver
             for (int j : neighborList)
             {
                 cost++;
-                if (coloring[i] != colorVals[0] && coloring[i] == coloring[j]) retVal++;
+                if (coloring[i] != colorVals[0] && coloring[i] == coloring[j]) totalConflicts++;
             }
         }
 
-        return retVal;
+        return totalConflicts;
     }
 
     private int[] makeRandomColoring(int size)
@@ -595,12 +617,16 @@ public class ConstraintSolver
         int[] retVals = new int[size];
         Random randGen = new Random();
 
-        for (int i = 0; i <= retVals.length - 1; i++)
-        {
-            retVals[i] = randGen.nextInt(colorVals.length - 1) + 1;
-        }
+        for (int i = 0; i <= retVals.length - 1; i++) retVals[i] = colorVals[randGen.nextInt(colorVals.length - 1) + 1];
 
         return retVals;
+    }
+
+    private int getTotalPopFitness(Graph myGraph, int[][] population)
+    {
+        int fitness = 0;
+        for (int i = 0; i <= population.length - 1; i++) fitness += countTotalConflicts(myGraph, population[i]);
+        return fitness;
     }
     //*********End Code for Genetic Algorithm************
     //***************************************************
