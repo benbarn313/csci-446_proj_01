@@ -410,7 +410,7 @@ public class ConstraintSolver
 
         long numTries = 0;
         long maxTries = 100000000;
-        int abandonThreshold = 1000;
+        int abandonThreshold = 10;
 
         while (numTries < maxTries && !checkPopForSolution(myGraph, population))
         {

@@ -12,7 +12,7 @@ public class Main
 	    Dictionary<String, Dictionary<Integer, Result[]>> allResults = new Hashtable<>();
         LocalDateTime start, stop;
         String algName;
-        Graph allGraphs[] = new Graph[4];
+        Graph allGraphs[] = new Graph[10];
 
         //populate results dictionaries
         allResults.put("simpleBacktrack", new Hashtable<>());

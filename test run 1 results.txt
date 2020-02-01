@@ -1,0 +1,573 @@
+"C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.2.1\jbr\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.2.1\lib\idea_rt.jar=52575:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.2.1\bin" -Dfile.encoding=UTF-8 -classpath C:\Users\Ben\Repositories\csci-446_proj_01\out\production\csci-446_proj_01 Main
+
+===== GRAPH 0 =====
+Number of nodes: 10
+Number of edges: 42
+Greatest number of edges on a node: 7
+Least number of edges on a node: 3
+Average number of edges per node: 4.20
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:05:28.966036400
+...
+Stopped simpleBacktrack at 2020-01-31T22:05:28.983030500
+Cost: -1451 | States: 63
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:05:28.993027300
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:05:28.994026400
+Cost: -3253 | States: 21
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:05:28.995026400
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:05:28.997025700
+Cost: -13705 | States: 15
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:05:28.997025700
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:06:30.221443400
+Cost: -248700000200 | States: 100000000
+==========================
+
+===== GRAPH 1 =====
+Number of nodes: 20
+Number of edges: 100
+Greatest number of edges on a node: 7
+Least number of edges on a node: 3
+Average number of edges per node: 5.00
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:06:30.223022400
+...
+Stopped simpleBacktrack at 2020-01-31T22:06:30.224023600
+Cost: -15444 | States: 432
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:06:30.224023600
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:06:30.225039400
+Cost: -15693 | States: 60
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:06:30.225039400
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:06:30.226037
+Cost: -37843 | States: 6
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:06:30.226037
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:08:26.261881200
+Cost: -564500000200 | States: 100000000
+==========================
+
+===== GRAPH 2 =====
+Number of nodes: 30
+Number of edges: 160
+Greatest number of edges on a node: 8
+Least number of edges on a node: 3
+Average number of edges per node: 5.33
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:08:26.262868600
+...
+Stopped simpleBacktrack at 2020-01-31T22:08:26.262868600
+Cost: -82825 | States: 1728
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:08:26.262868600
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:08:26.264867900
+Cost: -65439 | States: 216
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:08:26.264867900
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:08:26.272882500
+Cost: -421003 | States: 48
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:08:26.272882500
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:11:30.713456700
+Cost: -889500000200 | States: 100000000
+==========================
+
+===== GRAPH 3 =====
+Number of nodes: 40
+Number of edges: 208
+Greatest number of edges on a node: 8
+Least number of edges on a node: 3
+Average number of edges per node: 5.20
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:11:30.714444300
+...
+Stopped simpleBacktrack at 2020-01-31T22:11:30.715456500
+Cost: -226103 | States: 3969
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:11:30.715456500
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:11:30.715456500
+Cost: -20114 | States: 51
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:11:30.715456500
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:11:30.718459700
+Cost: -330091 | States: 21
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:11:30.718459700
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:15:18.124679300
+Cost: -1159300000200 | States: 100000000
+==========================
+
+===== GRAPH 4 =====
+Number of nodes: 50
+Number of edges: 280
+Greatest number of edges on a node: 9
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:15:18.124679300
+...
+Stopped simpleBacktrack at 2020-01-31T22:15:18.125668500
+Cost: -695802 | States: 10449
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:15:18.125668500
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:15:18.126666100
+Cost: -159734 | States: 495
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:15:18.126666100
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:15:18.132701100
+Cost: -700363 | States: 45
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:15:18.133699200
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:20:01.319975400
+Cost: -1539500000200 | States: 100000000
+==========================
+
+===== GRAPH 5 =====
+Number of nodes: 60
+Number of edges: 334
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.57
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:20:01.319975400
+...
+Stopped simpleBacktrack at 2020-01-31T22:20:01.324973800
+Cost: -4404106 | States: 56382
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:20:01.325973700
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:20:01.326973600
+Cost: -372419 | States: 972
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:20:01.326973600
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:20:01.328973
+Cost: -204412 | States: 6
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:20:01.328973
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:25:45.452648300
+Cost: -1836900000200 | States: 100000000
+==========================
+
+===== GRAPH 6 =====
+Number of nodes: 70
+Number of edges: 392
+Greatest number of edges on a node: 11
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:25:45.452648300
+...
+Stopped simpleBacktrack at 2020-01-31T22:25:45.550667
+Cost: -94750859 | States: 1077561
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:25:45.550667
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:25:45.559651900
+Cost: -2295122 | States: 6195
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:25:45.559651900
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:25:45.573647400
+Cost: -3151927 | States: 123
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:25:45.573647400
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:32:29.909155400
+Cost: -2152700000200 | States: 100000000
+==========================
+
+===== GRAPH 7 =====
+Number of nodes: 80
+Number of edges: 450
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.63
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:32:29.909155400
+...
+Stopped simpleBacktrack at 2020-01-31T22:32:29.930147200
+Cost: -21600219 | States: 214494
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:32:29.931153
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:32:29.931153
+Cost: -264780 | States: 606
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:32:29.932147600
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:32:29.944143500
+Cost: -2916085 | States: 120
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:32:29.945142900
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:40:06.031937500
+Cost: -2468500000200 | States: 100000000
+==========================
+
+===== GRAPH 8 =====
+Number of nodes: 90
+Number of edges: 510
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.67
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:40:06.031937500
+...
+Stopped simpleBacktrack at 2020-01-31T22:40:06.422812800
+Cost: -375359215 | States: 3464271
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:40:06.422812800
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:40:06.424812600
+Cost: -733127 | States: 1605
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:40:06.424812600
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:40:06.433810
+Cost: -1927894 | States: 39
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:40:06.433810
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T22:50:53.007844800
+Cost: -2793500000200 | States: 100000000
+==========================
+
+===== GRAPH 9 =====
+Number of nodes: 100
+Number of edges: 560
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 3 colors at 2020-01-31T22:50:53.007844800
+...
+Stopped simpleBacktrack at 2020-01-31T22:50:53.012830900
+Cost: -4371215 | States: 36003
+==========================
+Starting backtrackWithFwdCheck with 3 colors at 2020-01-31T22:50:53.012830900
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T22:50:53.013842400
+Cost: -389440 | States: 723
+==========================
+Starting backtrackWithAC3 with 3 colors at 2020-01-31T22:50:53.013842400
+...
+Stopped backtrackWithAC3 at 2020-01-31T22:50:53.019829200
+Cost: -1436353 | States: 39
+==========================
+Starting geneticAlgorithm with 3 colors at 2020-01-31T22:50:53.019829200
+...
+Abandon search - not expected to find a solution.
+Stopped geneticAlgorithm at 2020-01-31T23:00:12.181139200
+Cost: -3072500000200 | States: 100000000
+==========================
+
+===== GRAPH 0 =====
+Number of nodes: 10
+Number of edges: 42
+Greatest number of edges on a node: 7
+Least number of edges on a node: 3
+Average number of edges per node: 4.20
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:12.181139200
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:12.181139200
+Cost: 221 | States: 10
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:12.181139200
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:12.182129900
+Cost: 748 | States: 10
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:12.182129900
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:12.182129900
+Cost: 5883 | States: 10
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:12.182129900
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:12.185137900
+Cost: 1126629 | States: 453
+==========================
+
+===== GRAPH 1 =====
+Number of nodes: 20
+Number of edges: 100
+Greatest number of edges on a node: 7
+Least number of edges on a node: 3
+Average number of edges per node: 5.00
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:12.185137900
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:12.186128400
+Cost: 4701 | States: 131
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:12.186128400
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:12.186128400
+Cost: 5441 | States: 63
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:12.186128400
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:12.186128400
+Cost: 39878 | States: 22
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:12.186128400
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:12.350074600
+Cost: 73136625 | States: 12956
+==========================
+
+===== GRAPH 2 =====
+Number of nodes: 30
+Number of edges: 160
+Greatest number of edges on a node: 8
+Least number of edges on a node: 3
+Average number of edges per node: 5.33
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:12.351075300
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:12.351075300
+Cost: 73971 | States: 1526
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:12.351075300
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:12.352075
+Cost: 29875 | States: 241
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:12.352075
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:12.352075
+Cost: 106111 | States: 34
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:12.352075
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:13.102835800
+Cost: 323982598 | States: 36423
+==========================
+
+===== GRAPH 3 =====
+Number of nodes: 40
+Number of edges: 208
+Greatest number of edges on a node: 8
+Least number of edges on a node: 3
+Average number of edges per node: 5.20
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:13.103835500
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:13.114832
+Cost: 7185072 | States: 126320
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:13.114832
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:13.114832
+Cost: 63490 | States: 349
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:13.114832
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:13.115831700
+Cost: 227627 | States: 49
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:13.115831700
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:13.312769200
+Cost: 96847941 | States: 8354
+==========================
+
+===== GRAPH 4 =====
+Number of nodes: 50
+Number of edges: 280
+Greatest number of edges on a node: 9
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:13.312769200
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:13.312769200
+Cost: 3200 | States: 50
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:13.312769200
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:13.313768900
+Cost: 7231 | States: 50
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:13.313768900
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:13.314768600
+Cost: 278039 | States: 50
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:13.314768600
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:16.029348900
+Cost: 1439617255 | States: 93512
+==========================
+
+===== GRAPH 5 =====
+Number of nodes: 60
+Number of edges: 334
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.57
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:16.029348900
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:16.030349300
+Cost: 472925 | States: 6147
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:16.030349300
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:16.030349300
+Cost: 9964 | States: 65
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:16.030349300
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:16.032348900
+Cost: 388267 | States: 60
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:16.032348900
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:16.875091
+Cost: 457479954 | States: 24905
+==========================
+
+===== GRAPH 6 =====
+Number of nodes: 70
+Number of edges: 392
+Greatest number of edges on a node: 11
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:16.875091
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:16.876090900
+Cost: 933282 | States: 10618
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:16.876090900
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:16.876090900
+Cost: 62367 | States: 332
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:16.876090900
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:16.878090500
+Cost: 534899 | States: 70
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:16.878090500
+...
+Stopped geneticAlgorithm at 2020-01-31T23:00:17.680823
+Cost: 397323844 | States: 18457
+==========================
+
+===== GRAPH 7 =====
+Number of nodes: 80
+Number of edges: 450
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.63
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:00:17.680823
+...
+Stopped simpleBacktrack at 2020-01-31T23:00:17.722819100
+Cost: 45362019 | States: 446075
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:00:17.723817
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:00:17.724818700
+Cost: 668647 | States: 3395
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:00:17.724818700
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:00:17.729816100
+Cost: 996032 | States: 121
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:00:17.729816100
+...
+Stopped geneticAlgorithm at 2020-01-31T23:03:05.851392200
+Cost: 77991985969 | States: 3159489
+==========================
+
+===== GRAPH 8 =====
+Number of nodes: 90
+Number of edges: 510
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.67
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:03:05.851392200
+...
+Stopped simpleBacktrack at 2020-01-31T23:03:22.686009100
+Cost: 19009061089 | States: 175668413
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-01-31T23:03:22.686009100
+...
+Stopped backtrackWithFwdCheck at 2020-01-31T23:03:22.802971800
+Cost: 48028647 | States: 235764
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-01-31T23:03:22.802971800
+...
+Stopped backtrackWithAC3 at 2020-01-31T23:03:22.881935100
+Cost: 15082939 | States: 2384
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-01-31T23:03:22.881935100
+...
+Stopped geneticAlgorithm at 2020-01-31T23:04:16.808133300
+Cost: 23202699277 | States: 830596
+==========================
+
+===== GRAPH 9 =====
+Number of nodes: 100
+Number of edges: 560
+Greatest number of edges on a node: 10
+Least number of edges on a node: 3
+Average number of edges per node: 5.60
+
+Starting simpleBacktrack with 4 colors at 2020-01-31T23:04:16.809129600
+...
+Stopped simpleBacktrack at 2020-02-01T05:29:09.051687400
+Cost: 30844435079925 | States: 260286064213
+==========================
+Starting backtrackWithFwdCheck with 4 colors at 2020-02-01T05:29:09.051687400
+...
+Stopped backtrackWithFwdCheck at 2020-02-01T05:43:06.255888400
+Cost: 423349752937 | States: 2183291698
+==========================
+Starting backtrackWithAC3 with 4 colors at 2020-02-01T05:43:06.255888400
+...
+Stopped backtrackWithAC3 at 2020-02-01T05:43:06.318389100
+Cost: 17137449 | States: 753
+==========================
+Starting geneticAlgorithm with 4 colors at 2020-02-01T05:43:06.318389100
+...
+Stopped geneticAlgorithm at 2020-02-01T07:22:43.690371
+Cost: 3040675321542 | States: 98964209
+==========================
+
+Process finished with exit code 0
