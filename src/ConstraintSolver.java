@@ -398,7 +398,7 @@ public class ConstraintSolver
 
     //***************************************************
     //*********Code for Genetic Algorithm****************
-    public void localSearchGeneticAlgorithm(Graph myGraph, int numColors)
+    public void localSearchGeneticAlgorithm(Graph myGraph, int numColors, boolean expectSolution)
     {
         prepare(myGraph.getNumNodes(), numColors);
 
@@ -407,11 +407,16 @@ public class ConstraintSolver
 
         //Randomly generate the population
         for (int i = 0; i <= populationSize - 1; i++) population[i] = makeRandomColoring(population[i].length);
+
         long numTries = 0;
         long maxTries = 100000000;
+        int abandonThreshold = 1000;
 
         while (numTries < maxTries && !checkPopForSolution(myGraph, population))
         {
+            //if we shouldn't expect a solution and we've gone through enough iterations, terminate the loop
+            if (!expectSolution && numTries >= (maxTries / abandonThreshold)) break;
+
             if (Main.DEBUG_LEVEL >= 2) System.out.println("try " + numTries + ": " + getTotalPopFitness(myGraph, population));
             numTries++;
             cost++;
@@ -433,7 +438,16 @@ public class ConstraintSolver
             mergeIntoPopulation(myGraph, population, children);
         }
 
-        if (!hasSolution(myGraph)) cost = cost * -1;
+        //detect if we abandon the search early
+        if (numTries < maxTries && !hasSolution(myGraph) && !expectSolution)
+        {
+            System.out.println("Abandon search - not expected to find a solution.");
+            //Project what the cost and number examined states would have been if we had continued until reaching maxTries
+            cost *= abandonThreshold;
+            numTries *= abandonThreshold;
+        }
+
+        if (!hasSolution(myGraph)) cost *= -1;
         statesExamined = numTries;
     }
 

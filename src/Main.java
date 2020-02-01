@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class Main
 {
-    public static final int DEBUG_LEVEL = 1; //flag for triggering debug messages
+    public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages
 
     public static void main(String[] args)
     {
@@ -12,7 +12,7 @@ public class Main
 	    Dictionary<String, Dictionary<Integer, Result[]>> allResults = new Hashtable<>();
         LocalDateTime start, stop;
         String algName;
-        Graph allGraphs[] = new Graph[5];
+        Graph allGraphs[] = new Graph[4];
 
         //populate results dictionaries
         allResults.put("simpleBacktrack", new Hashtable<>());
@@ -30,7 +30,7 @@ public class Main
             }
         }
 
-        for (int numColors = 4; numColors <= 4; numColors++)
+        for (int numColors = 3; numColors <= 4; numColors++)
         {
             allResults.get("simpleBacktrack").put(numColors, new Result[allGraphs.length]);
             allResults.get("backtrackWithFwdCheck").put(numColors, new Result[allGraphs.length]);
@@ -51,7 +51,9 @@ public class Main
                 System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
                 System.out.println("...");
 
+                boolean coloringHasSolution = false;
                 constraintSolver.simpleBacktrack(myGraph, numColors);
+                if (constraintSolver.getCost() > 0) coloringHasSolution = true;
 
                 stop = java.time.LocalDateTime.now();
                 System.out.println("Stopped " + algName + " at " + stop);
@@ -99,7 +101,7 @@ public class Main
                 System.out.println("Starting " + algName + " with " + numColors + " colors at " + start);
                 System.out.println("...");
 
-                constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors);
+                constraintSolver.localSearchGeneticAlgorithm(myGraph, numColors, coloringHasSolution);
 
                 stop = java.time.LocalDateTime.now();
                 System.out.println("Stopped " + algName + " at " + stop);
