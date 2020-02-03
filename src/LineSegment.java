@@ -1,3 +1,6 @@
+//Represents a line segment connecting two points on a Cartesian plane
+//Contains methods to facilitate the construction of the graph, specifically the method to test if it intersects with another line segment
+
 public class LineSegment implements Comparable<LineSegment>
 {
     private Point p1, p2;

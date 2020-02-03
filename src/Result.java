@@ -1,5 +1,8 @@
 import java.time.LocalDateTime;
 
+//Data structure to hold the results of attempting to color a graph with a particular algorithm
+//Used to group statistics on an algorithm's performance together for easier access
+
 public class Result
 {
     private long cost, statesExamined;

@@ -2,6 +2,10 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Random;
 
+//Class to contain the implementation of all algorithms
+//Algorithms were combined into a single class in order to share helper functions used by more than one algorithm
+//(e.g. there are many operations common to both backtracking with forward check and backtracking with AC3 consistency)
+
 public class ConstraintSolver
 {
     private long cost, statesExamined;

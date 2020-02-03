@@ -1,3 +1,6 @@
+//Represents a point on a Cartesian plane
+//Contains methods to facilitate the construction of the graph
+
 public class Point
 {
     private double x,y;
@@ -28,6 +31,8 @@ public class Point
     {
         //first make sure they are collinear
         if (getOrientation(start, this, end) != 0) return false;
+        //triggering this error message indicates an edge-case that results in erroneous graphs
+        //if this message is triggered during graph creation, it is a sign to throw out that graph and try again
         else System.out.println("WARNING! Attempted liesBetween function with non-collinear points.");
 
         if (this.getX() < Math.max(start.getX(), end.getX()) && this.getX() > Math.min(start.getX(), end.getX())

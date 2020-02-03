@@ -2,6 +2,10 @@ import java.time.LocalDateTime;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+//Main class used to test the operation of the algorithms
+//Generates a set of graphs and attempts to color each one with each algorithm using 3 and 4 colors
+//Then stores the results of the attempted coloring using Dictionary data structures and also outputs the results
+
 public class Main
 {
     public static final int DEBUG_LEVEL = 0; //flag for triggering debug messages

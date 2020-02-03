@@ -1,5 +1,10 @@
 import java.util.*;
 
+//Class to represent a graph, i.e. a set of nodes connected by a set of edges
+//Edges are represented in adjacency-list format
+//The graph is undirected
+//Also contains the procedure for constructing a graph; the construction procedure generates planar graphs suitable for coloring
+
 public class Graph {
     private Point[] points;
     private ArrayList<Integer>[] edges;
